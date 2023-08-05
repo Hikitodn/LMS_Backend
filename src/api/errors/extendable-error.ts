@@ -1,22 +1,19 @@
-import { HttpStatus } from "http-status";
+import { TypeError } from "./types";
 
 /**
  * @extends Error
  */
 export class ExtendableError extends Error {
   public errors: string;
-  public httpStatus: HttpStatus;
+  public status: number;
   public isPublic: boolean;
-  constructor(
-    msg: string,
-    errors: string,
-    httpStatus: HttpStatus,
-    isPublic: boolean
-  ) {
+  public stack?: string | undefined;
+
+  constructor({ msg, errors, status, isPublic, stack }: TypeError) {
     super(msg);
     this.errors = errors;
-    this.httpStatus = httpStatus;
+    this.status = status;
     this.isPublic = isPublic;
-    // this.stack =
+    this.stack = stack;
   }
 }
