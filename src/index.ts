@@ -1,6 +1,10 @@
+import "reflect-metadata";
 import env from "./config/env";
 import app from "./config/express";
-import "reflect-metadata";
+import db from "./config/db_connect";
+
+// Connect database
+db.connect();
 
 // Run server
 app.listen(env.port, () => {
