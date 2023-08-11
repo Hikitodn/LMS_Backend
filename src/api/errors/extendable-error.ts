@@ -1,19 +1,41 @@
-import { TypeError } from "./types";
+export enum HttpCode {
+  OK = 200,
+  NO_CONTENT = 204,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  FORBIDDEN = 403,
+  NOT_FOUND = 404,
+  INTERNAL_SERVER_ERROR = 500,
+}
+
+export interface ErrorArgs {
+  message: string;
+  errors: string;
+  status: HttpCode;
+  isPublic: boolean;
+  isOperational?: boolean;
+}
 
 /**
  * @extends Error
  */
 export class ExtendableError extends Error {
-  public errors: string;
-  public status: number;
-  public isPublic: boolean;
-  public stack?: string | undefined;
+  public readonly errors: string;
+  public readonly status: HttpCode;
+  public readonly isPublic: boolean;
+  public readonly isOperational: boolean = true;
 
-  constructor({ msg, errors, status, isPublic, stack }: TypeError) {
-    super(msg);
+  constructor({ message, errors, status, isPublic, isOperational }: ErrorArgs) {
+    super(message);
+    this.name = this.constructor.name;
     this.errors = errors;
     this.status = status;
     this.isPublic = isPublic;
-    this.stack = stack;
+
+    if (isOperational !== undefined) {
+      this.isOperational = isOperational;
+    }
+
+    Error.captureStackTrace(this);
   }
 }

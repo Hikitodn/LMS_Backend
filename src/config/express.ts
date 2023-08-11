@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
+import { errorMiddleware } from "@middlewares/index";
 
 /**
  * Express instance
@@ -9,14 +10,13 @@ import cors from "cors";
  */
 const app = express();
 
-// parse body params and attache them to req.body
-app.use(bodyParser.json());
+// Middlewares
+app.use(bodyParser.json()); // parse body params and attache them to req.body
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(helmet()); // secure apps by setting various HTTP headers
+app.use(cors()); // enable CORS - Cross Origin Resource Sharing
+app.use(errorMiddleware.handler); // error handler, send stacktrace only during development
 
-// secure apps by setting various HTTP headers
-app.use(helmet());
-
-// enable CORS - Cross Origin Resource Sharing
-app.use(cors());
+// Routes
 
 export default app;
