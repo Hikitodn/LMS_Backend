@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import env from "./config/env";
 import app from "./config/express";
+import env from "./config/env";
 import db from "./config/db_connect";
 
 // Connect database

@@ -8,7 +8,7 @@ const PostgresDataSource = new DataSource({
   username: env.db_username,
   password: env.db_password,
   database: env.db_name,
-  synchronize: true,
+  synchronize: env.nodeEnv === "development" ? true : false,
   logging: true,
   entities: ["../api/models/*"],
   subscribers: [],
