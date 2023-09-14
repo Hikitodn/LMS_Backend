@@ -133,3 +133,6 @@ dist
 .yarn/releases
 .yarn/sdks
 .yarn/versions
+
+# typeorm logger
+ormlogs.log

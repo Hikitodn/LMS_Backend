@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import env from "./env";
+import * as entities from "@entities/index";
 
 const PostgresDataSource = new DataSource({
   type: "postgres",
@@ -10,7 +11,8 @@ const PostgresDataSource = new DataSource({
   database: env.db_name,
   synchronize: env.nodeEnv === "development" ? true : false,
   logging: true,
-  entities: ["../api/models/*"],
+  logger: "file",
+  entities: [...Object.values(entities)],
   subscribers: [],
   migrations: [],
 });
