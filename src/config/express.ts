@@ -3,6 +3,7 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import { errorMiddleware } from "@middlewares/index";
+import routes from "@routes/index";
 
 /**
  * Express instance
@@ -18,5 +19,6 @@ app.use(cors()); // enable CORS - Cross Origin Resource Sharing
 app.use(errorMiddleware.handler); // error handler, send stacktrace only during development
 
 // Routes
+app.use("/v1", routes);
 
 export default app;

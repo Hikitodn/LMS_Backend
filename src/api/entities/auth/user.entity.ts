@@ -1,8 +1,8 @@
 import { UserRole } from "@utils/instance";
-import { IsEmail, Min, Max } from "class-validator";
 import env from "src/config/env";
 import bcrypt from "bcryptjs";
 import {
+  AfterLoad,
   BaseEntity,
   BeforeInsert,
   Column,
@@ -14,22 +14,16 @@ import {
 
 @Entity("user")
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
-  @Max(254)
-  @IsEmail()
   email: string;
 
   @Column()
-  @Min(8)
-  @Max(20)
   password: string;
 
   @Column()
-  @Min(5)
-  @Max(20)
   name: string;
 
   @Column({ default: false })
@@ -47,6 +41,9 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @AfterLoad()
+  async load() {}
 
   @BeforeInsert()
   async cryptPassword() {

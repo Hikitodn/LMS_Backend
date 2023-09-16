@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import env from "./env";
 import * as entities from "@entities/index";
 
-const PostgresDataSource = new DataSource({
+export const PostgresDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
   port: 5432,
@@ -17,7 +17,7 @@ const PostgresDataSource = new DataSource({
   migrations: [],
 });
 
-const connect = async () => {
+export const connect = async () => {
   try {
     await PostgresDataSource.initialize();
     console.log("Data Source has been initialized successfully!");
@@ -25,5 +25,3 @@ const connect = async () => {
     console.error("Error during Data Source initialization:", error);
   }
 };
-
-export default { connect, PostgresDataSource };
