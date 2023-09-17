@@ -1,8 +1,8 @@
 import { AuthRepository } from "./auth.repository";
-import { UserDTO } from "./user.dto";
+import { User } from "@entities/index";
 
-const create = async (user: UserDTO) => {
-  const result = AuthRepository.insert(user);
+const create = async (user: User) => {
+  const result = await AuthRepository.insert(user);
   return result;
 };
 

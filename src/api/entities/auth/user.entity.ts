@@ -14,7 +14,7 @@ import {
 
 @Entity("user")
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: number;
 
   @Column({ unique: true })

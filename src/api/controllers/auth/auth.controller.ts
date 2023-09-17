@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { UserDTO } from "./user.dto";
 import AuthService from "./auth.service";
 import httpStatus from "http-status";
-// import { validateOrReject } from "class-validator";
+import { User } from "@entities/index";
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let user = new UserDTO();
-    user = req.body;
-
-    const result = await AuthService.create(user);
+    const newUser = new User();
+    newUser.email = req.body.email;
+    newUser.password = req.body.password;
+    newUser.name = req.body.name;
+    const result = AuthService.create(newUser);
     res.status(httpStatus.CREATED);
     res.json(result);
   } catch (error) {
