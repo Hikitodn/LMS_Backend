@@ -2,7 +2,6 @@ import { ApiError } from "@errors/api-error";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import env from "src/config/env";
-// import Joi from "joi";
 
 /**
  * Error handler. Send stacktrace only during development
