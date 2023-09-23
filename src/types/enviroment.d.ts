@@ -6,8 +6,9 @@ declare global {
       PORT?: string;
 
       // JWT
-      JWT_SECRET: string;
-      JWT_EXPIRATION_INTERVAL: string;
+      JWT_ACCESS_TOKEN: string;
+      JWT_REFRESH_TOKEN: string;
+      JWT_EXPIRATION_MINUTES: string;
 
       // SQL
       DB_NAME: string;

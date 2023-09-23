@@ -1,5 +1,8 @@
 import { AuthController } from "@controllers/index";
-import { authValidation } from "@validations/auth/auth.validation";
+import {
+  loginValidation,
+  registerValidation,
+} from "@validations/auth/auth.validation";
 import express from "express";
 
 const router = express.Router();
@@ -25,6 +28,8 @@ router
    *
    * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
    */
-  .post(authValidation, AuthController.register);
+  .post(registerValidation, AuthController.register);
+
+router.route("/login").post(loginValidation, AuthController.login);
 
 export default router;

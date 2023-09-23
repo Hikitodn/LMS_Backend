@@ -2,15 +2,16 @@ import { UserRole } from "@utils/instance";
 import env from "src/config/env";
 import bcrypt from "bcryptjs";
 import {
-  AfterLoad,
   BaseEntity,
   BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from "typeorm";
+import { Profile } from "./profile.entity";
 
 @Entity("user")
 export class User extends BaseEntity {
@@ -39,11 +40,9 @@ export class User extends BaseEntity {
   @CreateDateColumn()
   created_at: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @AfterLoad()
-  async load() {}
+  @OneToOne(() => Profile, (profile) => profile.user, { cascade: ["insert"] })
+  @JoinColumn()
+  profile: Profile;
 
   @BeforeInsert()
   async cryptPassword() {

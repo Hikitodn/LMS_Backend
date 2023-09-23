@@ -32,10 +32,11 @@ const getOneUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const updateUser = async (_req: Request, res: Response, next: NextFunction) => {
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const result = await userService.updateById(req.params.id, req.body);
     res.status(httpStatus.OK);
-    // res.json(result);
+    res.json(result);
   } catch (error) {
     next(error);
   }

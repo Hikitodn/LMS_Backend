@@ -9,7 +9,6 @@ const create = async (user: User) => {
 
   newUser.email = user.email;
   newUser.password = user.password;
-  newUser.name = user.name;
 
   // const existedUser = await UserRepository.findOne({
   //   where: { email: newUser.email },
@@ -66,41 +65,14 @@ const getById = async (id: string) => {
   return result;
 };
 
-const updateById = async () => {
-  const result = UserRepository;
+const updateById = async (id: string, user: User) => {
+  const result = await UserRepository.update(id, user);
   return result;
 };
 
-const deleteById = async () => {
-  const result = UserRepository;
+const deleteById = async (id: string) => {
+  const result = await UserRepository.delete(id);
   return result;
 };
-
-// const create = async (user: User) => {
-//   const newUser = new User();
-//   newUser.email = user.email;
-//   newUser.password = user.password;
-//   newUser.name = user.name;
-//   const result = await UserRepository.insert(newUser);
-//   return result;
-// };
-
-// const create = async (user: User) => {
-//   const newUser = new User();
-//   newUser.email = user.email;
-//   newUser.password = user.password;
-//   newUser.name = user.name;
-//   const result = await UserRepository.insert(newUser);
-//   return result;
-// };
-
-// const create = async (user: User) => {
-//   const newUser = new User();
-//   newUser.email = user.email;
-//   newUser.password = user.password;
-//   newUser.name = user.name;
-//   const result = await UserRepository.insert(newUser);
-//   return result;
-// };
 
 export default { create, getAll, getById, updateById, deleteById };

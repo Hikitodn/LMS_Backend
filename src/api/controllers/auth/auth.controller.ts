@@ -4,8 +4,7 @@ import httpStatus from "http-status";
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { newUser } = req.body;
-    const result = authService.createUserAndGenerateToken(newUser);
+    const result = await authService.createUserAndGenerateToken(req.body);
     res.status(httpStatus.CREATED);
     res.json(result);
   } catch (error) {
@@ -13,12 +12,14 @@ const register = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-// const login = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
+const login = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await authService.verifyUserAndGenerateToken(req.body);
+    res.status(httpStatus.OK);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-export default { register };
+export default { register, login };

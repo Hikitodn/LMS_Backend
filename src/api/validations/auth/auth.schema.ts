@@ -16,7 +16,7 @@ const password = Joi.string()
   .messages({
     "string.empty": "Password field is required",
     "string.pattern.base":
-      "Atleast one number, letter and the first letter should be uppercase letter",
+      "Your password must have number and the first letter should be uppercase",
   });
 
 const password_repeat = Joi.any()
@@ -38,9 +38,26 @@ const name = Joi.string()
     "string.empty": "Name field is required",
   });
 
-export const authSchema = Joi.object({
+const date_of_birth = Joi.date().messages({
+  "date.base": "Invalid date format",
+});
+
+const gender = Joi.string().valid("male", "female").messages({
+  "any.only": "Only accept certain options [male, female]",
+});
+
+export const registerSchema = Joi.object({
   email,
   password,
   password_repeat,
   name,
+  profile: {
+    date_of_birth,
+    gender,
+  },
+});
+
+export const loginSchema = Joi.object({
+  email,
+  password,
 });
