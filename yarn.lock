@@ -518,6 +518,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bluebird@npm:^3.5.39":
+  version: 3.5.39
+  resolution: "@types/bluebird@npm:3.5.39"
+  checksum: a6218268987571e1ea782ecff8ac89ce06dcff4819e1beb64692d005e59967a35b4be78a3e72ae7524f1d4e0e58c2d4b7701c1cc9fc7b115742c44575bde3395
+  languageName: node
+  linkType: hard
+
 "@types/body-parser@npm:*":
   version: 1.19.2
   resolution: "@types/body-parser@npm:1.19.2"
@@ -1360,6 +1367,13 @@ __metadata:
   version: 2.2.0
   resolution: "binary-extensions@npm:2.2.0"
   checksum: ccd267956c58d2315f5d3ea6757cf09863c5fc703e50fbeb13a7dc849b812ef76e3cf9ca8f35a0c48498776a7478d7b4a0418e1e2b8cb9cb9731f2922aaad7f8
+  languageName: node
+  linkType: hard
+
+"bluebird@npm:^3.7.2":
+  version: 3.7.2
+  resolution: "bluebird@npm:3.7.2"
+  checksum: 869417503c722e7dc54ca46715f70e15f4d9c602a423a02c825570862d12935be59ed9c7ba34a9b31f186c017c23cac6b54e35446f8353059c101da73eac22ef
   languageName: node
   linkType: hard
 
@@ -3649,6 +3663,7 @@ __metadata:
   resolution: "lms_backend@workspace:."
   dependencies:
     "@types/bcryptjs": ^2.4.3
+    "@types/bluebird": ^3.5.39
     "@types/cors": ^2.8.13
     "@types/express": ^4.17.17
     "@types/lodash": ^4.14.198
@@ -3658,6 +3673,7 @@ __metadata:
     "@typescript-eslint/parser": ^6.2.0
     apidoc: ^1.2.0
     bcryptjs: ^2.4.3
+    bluebird: ^3.7.2
     body-parser: ^1.20.2
     class-transformer: ^0.5.1
     cors: ^2.8.5

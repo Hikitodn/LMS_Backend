@@ -7,12 +7,12 @@ import httpStatus from "http-status";
  */
 export class ApiError extends ExtendableError {
   constructor({
+    name,
     message,
-    errors,
     status = httpStatus.INTERNAL_SERVER_ERROR,
-    isPublic = false,
-    isOperational,
+    isPublic,
+    isOperational = true,
   }: ErrorArgs) {
-    super({ message, errors, status, isPublic, isOperational });
+    super({ name, message, status, isPublic, isOperational });
   }
 }

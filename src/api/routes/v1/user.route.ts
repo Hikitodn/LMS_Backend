@@ -1,7 +1,6 @@
 import { UserController } from "@controllers/index";
 import { userValidation } from "@validations/user/user.validation";
 import express from "express";
-import passport from "passport";
 
 const router = express.Router();
 
@@ -17,10 +16,7 @@ router
    * @apiSuccess {String} firstname Firstname of the User.
    * @apiSuccess {String} lastname  Lastname of the User.
    */
-  .get(
-    passport.authenticate("jwt", { session: false }),
-    UserController.getAllUser
-  )
+  .get(UserController.getAllUser)
 
   /**
    * @api {get} /user/:id Request User information

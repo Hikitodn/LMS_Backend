@@ -10,10 +10,10 @@ export enum HttpCode {
 }
 
 export interface ErrorArgs {
+  name?: string;
   message: string;
-  errors: string;
   status: HttpCode;
-  isPublic: boolean;
+  isPublic?: boolean;
   isOperational?: boolean;
 }
 
@@ -21,15 +21,19 @@ export interface ErrorArgs {
  * @extends Error
  */
 export class ExtendableError extends Error {
-  public readonly errors: string;
-  public readonly status: HttpCode;
-  public readonly isPublic: boolean;
-  public readonly isOperational: boolean = true;
+  public status: HttpCode;
+  public isPublic: boolean;
+  public isOperational: boolean = true;
 
-  constructor({ message, errors, status, isPublic, isOperational }: ErrorArgs) {
+  constructor({
+    name = "ApiError",
+    message,
+    status,
+    isPublic = false,
+    isOperational,
+  }: ErrorArgs) {
     super(message);
-    this.name = this.constructor.name;
-    this.errors = errors;
+    this.name = name;
     this.status = status;
     this.isPublic = isPublic;
 

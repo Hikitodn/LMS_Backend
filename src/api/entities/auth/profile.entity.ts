@@ -36,9 +36,4 @@ export class Profile extends BaseEntity {
 
   @OneToOne(() => User, (user) => user.profile)
   user: User;
-
-  // @BeforeInsert()
-  // convert_dob() {
-  //   this.date_of_birth = new Date(this.date_of_birth.toLocaleDateString());
-  // }
 }

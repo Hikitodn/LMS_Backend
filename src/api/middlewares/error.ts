@@ -1,6 +1,7 @@
 import { ApiError } from "@errors/api-error";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
+import Joi from "joi";
 import env from "src/config/env";
 
 /**
@@ -8,39 +9,59 @@ import env from "src/config/env";
  * @public
  */
 export const handler = (
-  err: ApiError,
+  err: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  next: NextFunction
 ) => {
-  const respone = {
-    code: err.status,
-    name: err.name,
-    message: err.message || httpStatus[err.status],
-    errors: err.errors,
-    stack: err.stack,
-  };
+  if (err instanceof ApiError) {
+    const respone = {
+      status: err.status,
+      name: err.name,
+      message: err.message || httpStatus[err.status],
+      stack: err.stack,
+    };
 
-  if (env.nodeEnv !== "development") {
-    delete respone.stack;
+    if (env.nodeEnv !== "development") {
+      delete respone.stack;
+    }
+
+    res.status(respone.status);
+    res.json(respone);
   }
 
-  res.status(err.status);
-  res.json(respone);
+  next(err);
 };
 
-// export const converter = (
-//   err: Joi.ValidationError,
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const convertedError = new ApiError({
-//     message: "Validation Error",
-//     errors: err.name,
-//     status: httpStatus.BAD_REQUEST,
-//     isPublic: false,
-//   });
+export const converter = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  let convertedError = err;
 
-//   return handler(convertedError, req, res, next);
-// };
+  if (err instanceof Joi.ValidationError) {
+    convertedError = new ApiError({
+      name: err.name,
+      message: err.message,
+      status: httpStatus.BAD_REQUEST,
+    });
+  } else if (!(err instanceof ApiError)) {
+    convertedError = new ApiError({
+      name: err.name,
+      message: err.message,
+      status: httpStatus.INTERNAL_SERVER_ERROR,
+    });
+  }
+
+  return handler(convertedError, req, res, next);
+};
+
+export const notFound = (req: Request, res: Response, next: NextFunction) => {
+  const err = new ApiError({
+    message: "Not found",
+    status: httpStatus.NOT_FOUND,
+  });
+  return handler(err, req, res, next);
+};

@@ -10,11 +10,13 @@ const createUserAndGenerateToken = async (req: User) => {
     sub: user?.id,
   };
 
-  const jwtToken = await AuthRepository.generateToken(payload);
+  const accessToken = await AuthRepository.generateAccessToken(payload);
+  const refreshToken = "a";
   return {
     success: true,
-    token: jwtToken.token,
-    expiresIn: env.jwtExpirationMinutes,
+    accessToken: accessToken.token,
+    refreshToken: refreshToken,
+    expiresIn: env.jwtExpirationMinutes + "m",
   };
 };
 
@@ -25,11 +27,14 @@ const verifyUserAndGenerateToken = async (req: User) => {
     sub: user?.id,
   };
 
-  const jwtToken = await AuthRepository.generateToken(payload);
+  const accessToken = await AuthRepository.generateAccessToken(payload);
+  const refreshToken = "a";
+
   return {
     success: true,
-    token: jwtToken.token,
-    expiresIn: env.jwtExpirationMinutes,
+    accessToken: accessToken.token,
+    refreshToken: refreshToken,
+    expiresIn: env.jwtExpirationMinutes + "m",
   };
 };
 

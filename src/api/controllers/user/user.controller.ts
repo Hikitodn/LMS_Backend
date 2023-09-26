@@ -16,7 +16,10 @@ const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await userService.getAll(req.query);
     res.status(httpStatus.OK);
-    res.json(result);
+    res.json({
+      user: req.user,
+      result: result,
+    });
   } catch (error) {
     next(error);
   }

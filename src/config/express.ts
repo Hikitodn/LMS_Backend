@@ -2,10 +2,10 @@ import bodyParser from "body-parser";
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-// import { errorMiddleware } from "@middlewares/index";
+import { errorMiddleware } from "@middlewares/index";
 import routes from "@routes/index";
 import passport from "passport";
-import JwtStrategy from "./passport";
+import Strategies from "./passport";
 
 /**
  * Express instance
@@ -20,14 +20,18 @@ app.use(helmet()); // secure apps by setting various HTTP headers
 app.use(cors()); // enable CORS - Cross Origin Resource Sharing
 
 // Passport
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
 app.use(passport.initialize());
-passport.use(JwtStrategy);
+passport.use(Strategies.jwtStrategy);
 
 // Routes
 app.use("/v1", routes);
 
 // Middlewares
-// app.use(errorMiddleware.handler); // error handler, send stacktrace only during development
-// app.use(errorMiddleware.converter);
+app.use(errorMiddleware.handler);
+app.use(errorMiddleware.converter);
+app.use(errorMiddleware.notFound);
 
 export default app;

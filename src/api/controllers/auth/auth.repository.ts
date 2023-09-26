@@ -3,6 +3,8 @@ import { PostgresDataSource } from "src/config/db_connect";
 import bcrypt from "bcryptjs";
 import env from "src/config/env";
 import Jwt from "jsonwebtoken";
+import { ApiError } from "@errors/api-error";
+import httpStatus from "http-status";
 
 export const AuthRepository = PostgresDataSource.getRepository(User).extend({
   async insertUser(req: User) {
@@ -11,7 +13,11 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
         email: req.email,
       },
     });
-    if (existedUser) throw new Error("Existed user");
+    if (existedUser)
+      throw new ApiError({
+        message: "Email already registered",
+        status: httpStatus.UNPROCESSABLE_ENTITY,
+      });
 
     const profile = new Profile();
     profile.date_of_birth = req.profile.date_of_birth;
@@ -41,16 +47,26 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
       },
     });
 
+    const err = new ApiError({
+      message: "",
+      status: httpStatus.UNAUTHORIZED,
+    });
+
     if (user.password) {
       // return user and jwt
       if (user && (await bcrypt.compare(req.password, user.password))) {
         return { id: user.id };
       }
+      err.message = "Incorrect email or password";
     }
+
+    throw new ApiError(err);
   },
 
-  async generateToken(payload: string | object | Buffer) {
+  async generateAccessToken(payload: string | object | Buffer) {
     const token = Jwt.sign(payload, env.jwtAccessToken as string);
     return { token: "Bearer " + token };
   },
+
+  async generateRefreshToken() {},
 });
