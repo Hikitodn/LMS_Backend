@@ -12,7 +12,7 @@ export const handler = (
   err: Error,
   _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   if (err instanceof ApiError) {
     const respone = {
@@ -29,8 +29,6 @@ export const handler = (
     res.status(respone.status);
     res.json(respone);
   }
-
-  next(err);
 };
 
 export const converter = (
@@ -43,13 +41,11 @@ export const converter = (
 
   if (err instanceof Joi.ValidationError) {
     convertedError = new ApiError({
-      name: err.name,
       message: err.message,
       status: httpStatus.BAD_REQUEST,
     });
   } else if (!(err instanceof ApiError)) {
     convertedError = new ApiError({
-      name: err.name,
       message: err.message,
       status: httpStatus.INTERNAL_SERVER_ERROR,
     });

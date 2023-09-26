@@ -30,8 +30,8 @@ passport.use(Strategies.jwtStrategy);
 app.use("/v1", routes);
 
 // Middlewares
-app.use(errorMiddleware.handler);
 app.use(errorMiddleware.converter);
 app.use(errorMiddleware.notFound);
+app.use(errorMiddleware.handler);
 
 export default app;

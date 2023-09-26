@@ -1,21 +1,10 @@
-export enum HttpCode {
-  OK = 200,
-  NO_CONTENT = 204,
-  BAD_REQUEST = 400,
-  UNAUTHORIZED = 401,
-  FORBIDDEN = 403,
-  NOT_FOUND = 404,
-  UNPROCESSABLE_ENTITY = 422,
-  INTERNAL_SERVER_ERROR = 500,
-}
+import { HttpCode } from "@utils/instance";
 
-export interface ErrorArgs {
-  name?: string;
+export type ErrorArgs = {
   message: string;
   status: HttpCode;
   isPublic?: boolean;
-  isOperational?: boolean;
-}
+};
 
 /**
  * @extends Error
@@ -23,23 +12,17 @@ export interface ErrorArgs {
 export class ExtendableError extends Error {
   public status: HttpCode;
   public isPublic: boolean;
-  public isOperational: boolean = true;
+  public isOperational: boolean;
 
-  constructor({
-    name = "ApiError",
-    message,
-    status,
-    isPublic = false,
-    isOperational,
-  }: ErrorArgs) {
+  constructor({ message, status, isPublic }: ErrorArgs) {
     super(message);
-    this.name = name;
+    this.name = this.constructor.name;
     this.status = status;
-    this.isPublic = isPublic;
 
-    if (isOperational !== undefined) {
-      this.isOperational = isOperational;
+    if (isPublic !== undefined) {
+      this.isPublic = isPublic;
     }
+    this.isOperational = true;
 
     Error.captureStackTrace(this);
   }

@@ -47,10 +47,10 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
       },
     });
 
-    const err = new ApiError({
+    const err = {
       message: "",
       status: httpStatus.UNAUTHORIZED,
-    });
+    };
 
     if (user.password) {
       // return user and jwt
