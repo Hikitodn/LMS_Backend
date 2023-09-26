@@ -17,8 +17,8 @@ export const handler = (
   if (err instanceof ApiError) {
     const respone = {
       status: err.status,
-      name: err.name,
-      message: err.message || httpStatus[err.status],
+      name: err.name || httpStatus[err.status],
+      message: err.message,
       stack: err.stack,
     };
 
