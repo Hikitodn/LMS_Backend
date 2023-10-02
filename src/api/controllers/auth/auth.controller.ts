@@ -22,4 +22,20 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { register, login };
+const refresh = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await authService.refreshToken(req.headers.authorization);
+    res.status(httpStatus.OK);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const logout = async (req: Request, res: Response, _next: NextFunction) => {
+  const result = await authService.refreshToken(req.headers.authorization);
+  res.status(httpStatus.OK);
+  res.json(result);
+};
+
+export default { register, login, refresh, logout };

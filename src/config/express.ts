@@ -20,9 +20,6 @@ app.use(helmet()); // secure apps by setting various HTTP headers
 app.use(cors()); // enable CORS - Cross Origin Resource Sharing
 
 // Passport
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
 app.use(passport.initialize());
 passport.use(Strategies.jwtStrategy);
 

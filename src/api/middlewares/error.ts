@@ -44,11 +44,13 @@ export const converter = (
       message: err.message,
       status: httpStatus.BAD_REQUEST,
     });
+    convertedError.name = err.name;
   } else if (!(err instanceof ApiError)) {
     convertedError = new ApiError({
       message: err.message,
       status: httpStatus.INTERNAL_SERVER_ERROR,
     });
+    convertedError.name = err.name;
   }
 
   return handler(convertedError, req, res, next);

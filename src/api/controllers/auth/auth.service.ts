@@ -1,41 +1,54 @@
-import moment from "moment";
+import { JwtPayload } from "jsonwebtoken";
 import { AuthRepository } from "./auth.repository";
 import { User } from "@entities/index";
-import env from "src/config/env";
 
 const createUserAndGenerateToken = async (req: User) => {
   const user = await AuthRepository.insertUser(req);
-  const payload = {
-    exp: moment().add(env.jwtExpirationMinutes, "minutes").unix(),
-    sub: user?.id,
+  const payload: JwtPayload = {
+    sub: user.id,
   };
 
-  const accessToken = await AuthRepository.generateAccessToken(payload);
-  const refreshToken = "a";
+  const token = await AuthRepository.generateTokenRespone(payload);
+
   return {
-    success: true,
-    accessToken: accessToken.token,
-    refreshToken: refreshToken,
-    expiresIn: env.jwtExpirationMinutes + "m",
+    user: user,
+    token: token,
   };
 };
 
 const verifyUserAndGenerateToken = async (req: User) => {
   const user = await AuthRepository.verifyUser(req);
-  const payload = {
-    exp: moment().add(env.jwtExpirationMinutes, "minutes").unix(),
+  const payload: JwtPayload = {
     sub: user?.id,
   };
 
-  const accessToken = await AuthRepository.generateAccessToken(payload);
-  const refreshToken = "a";
+  const token = await AuthRepository.generateTokenRespone(payload);
 
   return {
-    success: true,
-    accessToken: accessToken.token,
-    refreshToken: refreshToken,
-    expiresIn: env.jwtExpirationMinutes + "m",
+    user: user,
+    token: token,
   };
 };
 
-export default { createUserAndGenerateToken, verifyUserAndGenerateToken };
+const refreshToken = async (token: string | undefined) => {
+  const refreshToken = token?.split(" ", 2)[1];
+  const user = await AuthRepository.verifyRefreshToken(refreshToken!);
+  const payload: JwtPayload = {
+    sub: user.id,
+  };
+  const newToken = AuthRepository.generateTokenRespone(payload);
+
+  return {
+    user: user,
+    token: newToken,
+  };
+};
+
+const deleteToken = async () => {};
+
+export default {
+  createUserAndGenerateToken,
+  verifyUserAndGenerateToken,
+  refreshToken,
+  deleteToken,
+};

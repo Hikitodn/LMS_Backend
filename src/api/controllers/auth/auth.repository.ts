@@ -2,9 +2,11 @@ import { Profile, User } from "@entities/index";
 import { PostgresDataSource } from "src/config/db_connect";
 import bcrypt from "bcryptjs";
 import env from "src/config/env";
-import Jwt from "jsonwebtoken";
 import { ApiError } from "@errors/api-error";
 import httpStatus from "http-status";
+import moment from "moment";
+import Jwt, { JwtPayload } from "jsonwebtoken";
+import { pick } from "lodash";
 
 export const AuthRepository = PostgresDataSource.getRepository(User).extend({
   async insertUser(req: User) {
@@ -29,21 +31,20 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
     user.name = req.name;
     user.profile = profile;
     const result = await AuthRepository.save(user);
-    return {
-      id: result.id,
-    };
+    return pick(result, [
+      "id",
+      "name",
+      "is_verified",
+      "role",
+      "profile.photo_path",
+    ]);
   },
 
   async verifyUser(req: User) {
     const user = await AuthRepository.findOneOrFail({
+      relations: { profile: true },
       where: {
         email: req.email,
-      },
-      select: {
-        id: true,
-        email: true,
-        password: true,
-        role: true,
       },
     });
 
@@ -55,7 +56,13 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
     if (user.password) {
       // return user and jwt
       if (user && (await bcrypt.compare(req.password, user.password))) {
-        return { id: user.id };
+        return pick(user, [
+          "id",
+          "name",
+          "is_verified",
+          "role",
+          "profile.photo_path",
+        ]);
       }
       err.message = "Incorrect email or password";
     }
@@ -63,10 +70,70 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
     throw new ApiError(err);
   },
 
-  async generateAccessToken(payload: string | object | Buffer) {
-    const token = Jwt.sign(payload, env.jwtAccessToken as string);
-    return { token: "Bearer " + token };
+  async verifyRefreshToken(token: string): Promise<Partial<User>> {
+    return new Promise((resolve, reject) => {
+      Jwt.verify(token, env.jwtRefreshToken as string, async (err, payload) => {
+        if (err) reject(err);
+        const user = await AuthRepository.findOneOrFail({
+          where: {
+            id: payload?.sub?.toString(),
+          },
+        });
+        resolve(
+          pick(user, [
+            "id",
+            "name",
+            "is_verified",
+            "role",
+            "profile.photo_path",
+          ])
+        );
+      });
+    });
   },
 
-  async generateRefreshToken() {},
+  async generateTokenRespone(payload: JwtPayload) {
+    const tokenType = "Bearer";
+    const accessToken = await this.accessToken(payload);
+    const refreshToken = await this.refreshToken(payload);
+    const expiresIn = moment().add(env.jwtExpirationMinutes, "minutes");
+    return {
+      tokenType,
+      accessToken,
+      refreshToken,
+      expiresIn,
+    };
+  },
+
+  accessToken(payload: JwtPayload): Promise<string> {
+    return new Promise((resolve, reject) => {
+      Jwt.sign(
+        payload,
+        env.jwtAccessToken as string,
+        {
+          expiresIn: 60 * Number(env.jwtExpirationMinutes),
+        },
+        (err, token) => {
+          if (err) reject(err);
+          resolve(token!);
+        }
+      );
+    });
+  },
+
+  refreshToken(payload: JwtPayload): Promise<string> {
+    return new Promise((resolve, reject) => {
+      Jwt.sign(
+        payload,
+        env.jwtRefreshToken as string,
+        {
+          expiresIn: 60 * Number(env.jwtExpirationMinutes),
+        },
+        (err, token) => {
+          if (err) reject(err);
+          resolve(token!);
+        }
+      );
+    });
+  },
 });
