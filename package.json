@@ -8,6 +8,8 @@
   "keywords": [
     "node",
     "typescript",
+    "express",
+    "RESTapi",
     "yarn"
   ],
   "engines": {
@@ -47,6 +49,7 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.2",
+    "redis": "^4.6.10",
     "reflect-metadata": "^0.1.13",
     "tslib": "^2.6.1",
     "typeorm": "^0.3.17"
@@ -62,6 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "apidoc": "^1.2.0",
+    "chai": "^4.3.10",
     "eslint": "^8.46.0",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",

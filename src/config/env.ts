@@ -17,4 +17,10 @@ export default {
   db_name: process.env.DB_NAME,
   db_username: process.env.DB_USERNAME,
   db_password: process.env.DB_PASSWORD,
+
+  // Redis
+  redis_port: process.env.REDIS_PORT,
+  redis_host: process.env.REDIS_HOST,
+  redis_user: process.env.REDIS_USER,
+  redis_pass: process.env.REDIS_PASS,
 };

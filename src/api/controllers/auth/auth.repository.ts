@@ -136,4 +136,6 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
       );
     });
   },
+
+  deleteToken() {},
 });

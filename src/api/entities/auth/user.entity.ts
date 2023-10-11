@@ -8,10 +8,12 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Profile } from "./profile.entity";
+import { Enrollment } from "..";
 
 @Entity("user")
 export class User extends BaseEntity {
@@ -43,6 +45,9 @@ export class User extends BaseEntity {
   @OneToOne(() => Profile, (profile) => profile.user, { cascade: ["insert"] })
   @JoinColumn()
   profile: Profile;
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.user)
+  public enrollment: Enrollment[];
 
   @BeforeInsert()
   async cryptPassword() {

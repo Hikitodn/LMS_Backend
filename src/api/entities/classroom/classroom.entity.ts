@@ -1,7 +1,8 @@
-import { BaseEntity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, OneToMany, PrimaryColumn } from "typeorm";
+import { Enrollment } from "./enrollment.entity";
 
 export class Classroom extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()
@@ -18,4 +19,7 @@ export class Classroom extends BaseEntity {
 
   @Column()
   isPublic: boolean;
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.classroom)
+  public enrollment: Enrollment[];
 }
