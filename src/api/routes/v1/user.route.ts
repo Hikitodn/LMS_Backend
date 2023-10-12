@@ -1,4 +1,6 @@
 import { UserController } from "@controllers/index";
+import { authMiddleware } from "@middlewares/index";
+import { ROLES } from "@utils/instance";
 import { userValidation } from "@validations/user/user.validation";
 import express from "express";
 
@@ -16,7 +18,7 @@ router
    * @apiSuccess {String} firstname Firstname of the User.
    * @apiSuccess {String} lastname  Lastname of the User.
    */
-  .get(UserController.getAllUser)
+  .get(authMiddleware.authorize("admin"), UserController.getAllUser)
 
   /**
    * @api {get} /user/:id Request User information

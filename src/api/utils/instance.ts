@@ -19,3 +19,11 @@ export enum HttpCode {
   UNPROCESSABLE_ENTITY = 422,
   INTERNAL_SERVER_ERROR = 500,
 }
+
+export enum ClassroomStatus {
+  OPEN = "open",
+  CLOSED = "closed",
+}
+
+export const ROLES = ["admin", "teacher", "student"];
+export const LOGGED_USER = "_loggedUser";
