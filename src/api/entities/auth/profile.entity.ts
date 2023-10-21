@@ -1,7 +1,6 @@
 import { GenderType } from "@utils/instance";
 import {
   BaseEntity,
-  // BeforeInsert,
   Column,
   Entity,
   OneToOne,

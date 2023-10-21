@@ -21,7 +21,7 @@ export enum HttpCode {
 }
 
 export enum ClassroomStatus {
-  OPEN = "open",
+  OPEN = "opening",
   CLOSED = "closed",
 }
 

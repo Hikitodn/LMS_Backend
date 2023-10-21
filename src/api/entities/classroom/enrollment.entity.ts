@@ -1,6 +1,13 @@
-import { BaseEntity, Column, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Classroom, User } from "..";
 
+@Entity("enrollment")
 export class Enrollment extends BaseEntity {
   @PrimaryGeneratedColumn()
   public id: number;

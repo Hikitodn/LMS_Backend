@@ -10,14 +10,15 @@ import {
   JoinColumn,
   OneToMany,
   OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from "typeorm";
 import { Profile } from "./profile.entity";
 import { Enrollment } from "..";
+import { nanoid } from "nanoid";
 
 @Entity("user")
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryColumn()
   id: string;
 
   @Column({ unique: true })
@@ -47,12 +48,16 @@ export class User extends BaseEntity {
   profile: Profile;
 
   @OneToMany(() => Enrollment, (enrollment) => enrollment.user)
-  public enrollment: Enrollment[];
+  public enrollments: Enrollment[];
 
   @BeforeInsert()
   async cryptPassword() {
     const saltRounds = env.nodeEnv === "development" ? 1 : 10;
     const hash = await bcrypt.hash(this.password, saltRounds);
     this.password = hash;
+  }
+
+  generateId() {
+    this.id = nanoid();
   }
 }
