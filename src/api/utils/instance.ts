@@ -27,3 +27,13 @@ export enum ClassroomStatus {
 
 export const ROLES = ["admin", "teacher", "student"];
 export const LOGGED_USER = "_loggedUser";
+
+export interface IUser {
+  id: string;
+  name: string;
+  role: string;
+  isVerfied: boolean;
+  profile: {
+    photo_path: string;
+  };
+}

@@ -1,9 +1,14 @@
+import { ClassroomController } from "@controllers/index";
+import { authMiddleware } from "@middlewares/index";
 import express from "express";
 
 const router = express.Router();
 
 // Classroom
-router.route("/").get().post();
+router
+  .route("/")
+  .get()
+  .post(authMiddleware.authorize("teacher"), ClassroomController.create);
 router.route("/:classroomId").get().patch().delete();
 
 // Document

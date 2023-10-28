@@ -3,6 +3,7 @@ import {
   BeforeInsert,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryColumn,
 } from "typeorm";
@@ -13,6 +14,7 @@ import { Document } from "./document.entity";
 import { Examine } from "./examine.entity";
 import { Assignment } from "./assignment.entity";
 import { Question } from "./question.entity";
+import { User } from "..";
 
 @Entity("classroom")
 export class Classroom extends BaseEntity {
@@ -36,6 +38,9 @@ export class Classroom extends BaseEntity {
 
   @OneToMany(() => Enrollment, (enrollment) => enrollment.classroom)
   public enrollments: Enrollment[];
+
+  @ManyToOne(() => User, (user) => user.classrooms)
+  user: User;
 
   @OneToMany(() => Document, (document) => document.classroom)
   documents: Document[];

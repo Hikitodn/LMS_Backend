@@ -1,6 +1,6 @@
 import { User } from "@entities/index";
 import { ApiError } from "@errors/api-error";
-import { LOGGED_USER, ROLES } from "@utils/instance";
+import { LOGGED_USER } from "@utils/instance";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import passport from "passport";
@@ -40,7 +40,7 @@ const handleJwt =
   };
 
 export const authorize =
-  (role = ROLES) =>
+  (role: string | string[]) =>
   (req: Request, res: Response, next: NextFunction) =>
     passport.authenticate(
       "jwt",

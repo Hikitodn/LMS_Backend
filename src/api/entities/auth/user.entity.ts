@@ -13,7 +13,7 @@ import {
   PrimaryColumn,
 } from "typeorm";
 import { Profile } from "./profile.entity";
-import { Enrollment } from "..";
+import { Classroom, Enrollment } from "..";
 import { nanoid } from "nanoid";
 
 @Entity("user")
@@ -50,6 +50,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Enrollment, (enrollment) => enrollment.user)
   public enrollments: Enrollment[];
 
+  @OneToMany(() => Classroom, (classroom) => classroom.user)
+  public classrooms: Classroom[];
+
   @BeforeInsert()
   async cryptPassword() {
     const saltRounds = env.nodeEnv === "development" ? 1 : 10;
@@ -57,6 +60,7 @@ export class User extends BaseEntity {
     this.password = hash;
   }
 
+  @BeforeInsert()
   generateId() {
     this.id = nanoid();
   }

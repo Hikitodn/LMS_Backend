@@ -38,6 +38,10 @@ const name = Joi.string()
     "string.empty": "Name field is required",
   });
 
+const role = Joi.string().valid("student", "teacher").messages({
+  "any.only": "Only accept certain options [student, teacher]",
+});
+
 const date_of_birth = Joi.date().messages({
   "date.base": "Invalid date format",
 });
@@ -51,6 +55,7 @@ export const registerSchema = Joi.object({
   password,
   password_repeat,
   name,
+  role,
   profile: {
     date_of_birth,
     gender,

@@ -2,8 +2,8 @@ import { JwtPayload } from "jsonwebtoken";
 import { AuthRepository } from "./auth.repository";
 import { User } from "@entities/index";
 
-const createUserAndGenerateToken = async (req: User) => {
-  const user = await AuthRepository.insertUser(req);
+const createUserAndGenerateToken = async (body: User) => {
+  const user = await AuthRepository.insertUser(body);
   const payload: JwtPayload = {
     sub: user.id,
   };

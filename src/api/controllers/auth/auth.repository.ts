@@ -9,10 +9,10 @@ import Jwt, { JwtPayload } from "jsonwebtoken";
 import { pick } from "lodash";
 
 export const AuthRepository = PostgresDataSource.getRepository(User).extend({
-  async insertUser(req: User) {
+  async insertUser(body: User) {
     const existedUser = await AuthRepository.findOne({
       where: {
-        email: req.email,
+        email: body.email,
       },
     });
     if (existedUser)
@@ -22,13 +22,14 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
       });
 
     const profile = new Profile();
-    profile.date_of_birth = req.profile.date_of_birth;
-    profile.gender = req.profile.gender;
+    profile.date_of_birth = body.profile.date_of_birth;
+    profile.gender = body.profile.gender;
 
     const user = new User();
-    user.email = req.email;
-    user.password = req.password;
-    user.name = req.name;
+    user.email = body.email;
+    user.password = body.password;
+    user.name = body.name;
+    user.role = body.role;
     user.profile = profile;
     const result = await AuthRepository.save(user);
     return pick(result, [

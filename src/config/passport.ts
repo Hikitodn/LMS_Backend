@@ -5,6 +5,7 @@ import {
   StrategyOptions,
 } from "passport-jwt";
 import { UserRepository } from "@controllers/user/user.repository";
+import { pick } from "lodash";
 
 const jwtOptions: StrategyOptions = {
   secretOrKey: env.jwtAccessToken,
@@ -19,12 +20,10 @@ const jwtStrategy = new JwtStrategy(jwtOptions, async (payload, done) => {
     });
 
     if (user)
-      return done(null, {
-        name: user?.name,
-        isVerified: user?.is_verified,
-        role: user?.role,
-        photo: user?.profile.photo_path,
-      });
+      return done(
+        null,
+        pick(user, ["id", "name", "role", "is_verified", "profile.photo_path"])
+      );
     return done(null, false);
   } catch (error) {
     return done(error, false);
