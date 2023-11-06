@@ -1,6 +1,6 @@
 import { User } from "@entities/index";
 import { ApiError } from "@errors/api-error";
-import { LOGGED_USER } from "@utils/instance";
+import { LOGGED_USER, ROLES } from "@utils/instance";
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import passport from "passport";
@@ -21,7 +21,11 @@ const handleJwt =
     }
 
     if (role === LOGGED_USER) {
-      if (user.role !== "admin" || req.params.userId !== user.id.toString()) {
+      if (
+        user.role !== "admin" &&
+        req.params.userId !== user.id.toString() &&
+        req.query.userId !== user.id.toString()
+      ) {
         apiError.status = httpStatus.FORBIDDEN;
         apiError.message = "Forbidden";
         return next(apiError);
@@ -40,7 +44,7 @@ const handleJwt =
   };
 
 export const authorize =
-  (role: string | string[]) =>
+  (role: string | string[] = ROLES) =>
   (req: Request, res: Response, next: NextFunction) =>
     passport.authenticate(
       "jwt",

@@ -1,9 +1,8 @@
-import { Classroom } from "@entities/index";
+import { Classroom, User } from "@entities/index";
 import { ClassroomRepository } from "./classroom.repository";
-import { IUser } from "@utils/instance";
+import { IUser, SearchCustomOptions } from "@utils/instance";
 import { ApiError } from "@errors/api-error";
 import httpStatus from "http-status";
-// import { ApiError } from "@errors/api-error";
 
 const createClassroom = async (user: IUser, body: Classroom) => {
   const existedClassroom = await ClassroomRepository.findOne({
@@ -11,27 +10,37 @@ const createClassroom = async (user: IUser, body: Classroom) => {
   });
 
   if (existedClassroom)
-    return new ApiError({
+    throw new ApiError({
       message: `Existed classroom name ${existedClassroom.name}`,
       status: httpStatus.BAD_REQUEST,
     });
+
+  const userId = new User();
+  userId.id = user.id;
 
   const newClassroom = new Classroom();
   newClassroom.name = body.name;
   newClassroom.description = body.description;
   newClassroom.isPublic = body.isPublic;
+  newClassroom.user = userId;
 
-  const result = await ClassroomRepository.insert(newClassroom);
+  const result = await ClassroomRepository.save(newClassroom);
   return result;
 };
 
-const getClassroom = async ({ page = 1, perPage = 20 }) => {
+const getClassrooms = async (
+  userId: string,
+  { column, type = "asc", page = 1, perPage = 20 }: SearchCustomOptions
+) => {
   const result = await ClassroomRepository.find({
     take: perPage,
     skip: perPage * (page - 1),
     cache: true,
+    where: { user: { id: userId } },
+    order: {
+      [`${column === "name" ? "name" : "created_at"}`]: type,
+    },
   });
-
   return result;
 };
 
@@ -41,6 +50,8 @@ const getClassroomById = async (id: string) => {
       id: id,
     },
   });
+
+  // if(result.isPublic === false && )
 
   return result;
 };
@@ -57,7 +68,7 @@ const deleteClassroom = async (id: string) => {
 
 export default {
   createClassroom,
-  getClassroom,
+  getClassrooms,
   getClassroomById,
   patchClassroom,
   deleteClassroom,

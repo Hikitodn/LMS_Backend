@@ -2,6 +2,7 @@ import {
   BaseEntity,
   BeforeInsert,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
@@ -35,6 +36,9 @@ export class Classroom extends BaseEntity {
 
   @Column()
   isPublic: boolean;
+
+  @CreateDateColumn()
+  created_at: Date;
 
   @OneToMany(() => Enrollment, (enrollment) => enrollment.classroom)
   public enrollments: Enrollment[];

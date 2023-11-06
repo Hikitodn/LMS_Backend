@@ -1,3 +1,5 @@
+import { FindOptionsOrderValue } from "typeorm";
+
 export enum UserRole {
   STUDENT = "student",
   TEACHER = "teacher",
@@ -25,6 +27,11 @@ export enum ClassroomStatus {
   CLOSED = "closed",
 }
 
+/**
+ * * 0 = admin
+ * * 1 = teacher
+ * * 2 = student
+ */
 export const ROLES = ["admin", "teacher", "student"];
 export const LOGGED_USER = "_loggedUser";
 
@@ -36,4 +43,11 @@ export interface IUser {
   profile: {
     photo_path: string;
   };
+}
+
+export interface SearchCustomOptions {
+  column: string | undefined;
+  type: FindOptionsOrderValue | undefined;
+  page: number;
+  perPage: number;
 }

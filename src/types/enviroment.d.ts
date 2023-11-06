@@ -22,12 +22,6 @@ declare global {
       REDIS_PASS: string;
     }
   }
-
-  // namespace Express {
-  //   interface User {
-  //     id: string
-  //   }
-  // }
 }
 
 export {};
