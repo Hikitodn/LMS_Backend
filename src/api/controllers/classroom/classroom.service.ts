@@ -28,7 +28,7 @@ const createClassroom = async (user: IUser, body: Classroom) => {
   return result;
 };
 
-const getClassrooms = async (
+const getAllClassrooms = async (
   userId: string,
   { column, type = "asc", page = 1, perPage = 20 }: SearchCustomOptions
 ) => {
@@ -44,7 +44,7 @@ const getClassrooms = async (
   return result;
 };
 
-const getClassroomById = async (id: string) => {
+const getOneClassroom = async (id: string) => {
   const result = await ClassroomRepository.findOneOrFail({
     where: {
       id: id,
@@ -56,7 +56,7 @@ const getClassroomById = async (id: string) => {
   return result;
 };
 
-const patchClassroom = async (id: string, body: Classroom) => {
+const updateClassroom = async (id: string, body: Classroom) => {
   const result = await ClassroomRepository.update(id, body);
   return result;
 };
@@ -68,8 +68,8 @@ const deleteClassroom = async (id: string) => {
 
 export default {
   createClassroom,
-  getClassrooms,
-  getClassroomById,
-  patchClassroom,
+  getAllClassrooms,
+  getOneClassroom,
+  updateClassroom,
   deleteClassroom,
 };

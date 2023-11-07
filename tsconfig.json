@@ -28,9 +28,9 @@
     "baseUrl": "." /* Specify the base directory to resolve non-relative module names. */,
     "paths": {
       "@controllers/*": ["./src/api/controllers/*"],
+      "@entities/*": ["./src/api/entities/*"],
       "@errors/*": ["./src/api/errors/*"],
       "@middlewares/*": ["./src/api/middlewares/*"],
-      "@entities/*": ["./src/api/entities/*"],
       "@routes/*": ["./src/api/routes/*"],
       "@services/*": ["./src/api/services/*"],
       "@utils/*": ["./src/api/utils/*"],

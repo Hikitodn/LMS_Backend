@@ -25,7 +25,7 @@ const router = express.Router();
  * @apiSuccess (Created 201) {String}  token.tokenType              Access Token's type
  * @apiSuccess (Created 201) {String}  token.accessToken            Authorization Token
  * @apiSuccess (Created 201) {String}  token.refreshToken           Token to get a new accessToken after expiration time
- * @apiSuccess (Created 201) {Number}  token.expiresIn              Access Token's expiration time in miliseconds
+ * @apiSuccess (Created 201) {Date}  token.expiresIn              Access Token's expiration time in miliseconds
  * @apiSuccess (Created 201) {String}  user.id                      User's id
  * @apiSuccess (Created 201) {String}  user.name                    User's name
  * @apiSuccess (Created 201) {Boolean} user.isVerified              User's isVerified

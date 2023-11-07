@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import userService from "./user.service";
 import httpStatus from "http-status";
 
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
+const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await userService.create(req.body);
     res.status(httpStatus.CREATED);
@@ -12,9 +12,9 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
+const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await userService.getAll(req.query);
+    const result = await userService.getAllUser(req.query);
     res.status(httpStatus.OK);
     res.json({
       user: req.user,
@@ -25,9 +25,9 @@ const getAllUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getOneUser = async (req: Request, res: Response, next: NextFunction) => {
+const getOne = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await userService.getById(req.params.id);
+    const result = await userService.getOneUser(req.params.id);
     res.status(httpStatus.OK);
     res.json(result);
   } catch (error) {
@@ -35,9 +35,9 @@ const getOneUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await userService.updateById(req.params.id, req.body);
+    const result = await userService.updateUser(req.params.id, req.body);
     res.status(httpStatus.OK);
     res.json(result);
   } catch (error) {
@@ -45,7 +45,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const deleteUser = async (_req: Request, res: Response, next: NextFunction) => {
+const remove = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     res.status(httpStatus.OK);
     // res.json(result);
@@ -54,4 +54,4 @@ const deleteUser = async (_req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { createUser, getAllUser, getOneUser, updateUser, deleteUser };
+export default { create, getAll, getOne, update, remove };

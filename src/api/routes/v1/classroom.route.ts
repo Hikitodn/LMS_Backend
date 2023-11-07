@@ -9,11 +9,11 @@ const router = express.Router();
 // Classroom
 router
   .route("/")
-  .get(authMiddleware.authorize(ROLES[1]), ClassroomController.getAllByUserId)
+  .get(authMiddleware.authorize(ROLES[1]), ClassroomController.getAll)
   .post(authMiddleware.authorize(ROLES[1]), ClassroomController.create);
 router
   .route("/:classroomId")
-  .get(authMiddleware.authorize(), ClassroomController.getOneById)
+  .get(authMiddleware.authorize(), ClassroomController.getOne)
   .patch(authMiddleware.authorize(LOGGED_USER), classroomController.update)
   .delete(authMiddleware.authorize(LOGGED_USER), ClassroomController.remove);
 

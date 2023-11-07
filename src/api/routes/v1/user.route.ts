@@ -17,7 +17,7 @@ router
    * @apiSuccess {String} firstname Firstname of the User.
    * @apiSuccess {String} lastname  Lastname of the User.
    */
-  .get(authMiddleware.authorize(), UserController.getAllUser)
+  .get(authMiddleware.authorize(), UserController.getAll)
 
   /**
    * @api {get} /user/:id Request User information
@@ -29,7 +29,7 @@ router
    * @apiSuccess {String} firstname Firstname of the User.
    * @apiSuccess {String} lastname  Lastname of the User.
    */
-  .post(userValidation, UserController.createUser);
+  .post(userValidation, UserController.create);
 
 router
   .route("/:userId")
@@ -43,7 +43,7 @@ router
    * @apiSuccess {String} firstname Firstname of the User.
    * @apiSuccess {String} lastname  Lastname of the User.
    */
-  .get(UserController.getOneUser)
+  .get(UserController.getOne)
 
   /**
    * @api {get} /user/:id Request User information
@@ -55,7 +55,7 @@ router
    * @apiSuccess {String} firstname Firstname of the User.
    * @apiSuccess {String} lastname  Lastname of the User.
    */
-  .patch(userValidation, UserController.updateUser)
+  .patch(userValidation, UserController.update)
 
   /**
    * @api {get} /user/:id Request User information
@@ -67,6 +67,6 @@ router
    * @apiSuccess {String} firstname Firstname of the User.
    * @apiSuccess {String} lastname  Lastname of the User.
    */
-  .delete(UserController.deleteUser);
+  .delete(UserController.remove);
 
 export default router;

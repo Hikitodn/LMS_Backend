@@ -16,13 +16,9 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getAllByUserId = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await classroomService.getClassrooms(
+    const result = await classroomService.getAllClassrooms(
       toPlainObject(req.user).id,
       toPlainObject(req.query)
     );
@@ -33,9 +29,9 @@ const getAllByUserId = async (
   }
 };
 
-const getOneById = async (req: Request, res: Response, next: NextFunction) => {
+const getOne = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await classroomService.getClassroomById(req.params.id);
+    const result = await classroomService.getOneClassroom(req.params.id);
     res.status(httpStatus.OK);
     res.json({ user: req.user, result: result });
   } catch (error) {
@@ -45,7 +41,7 @@ const getOneById = async (req: Request, res: Response, next: NextFunction) => {
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await classroomService.patchClassroom(
+    const result = await classroomService.updateClassroom(
       req.params.classroomId,
       req.body
     );
@@ -68,4 +64,4 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { create, getAllByUserId, getOneById, update, remove };
+export default { create, getAll, getOne, update, remove };

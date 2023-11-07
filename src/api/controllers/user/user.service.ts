@@ -27,7 +27,7 @@ const create = async (user: User) => {
   return result;
 };
 
-const getAll = async ({ page = 1, perPage = 20 }) => {
+const getAllUser = async ({ page = 1, perPage = 20 }) => {
   const fields = {
     id: true,
     email: true,
@@ -47,7 +47,7 @@ const getAll = async ({ page = 1, perPage = 20 }) => {
   return result;
 };
 
-const getById = async (id: string) => {
+const getOneUser = async (id: string) => {
   const fields = {
     id: true,
     email: true,
@@ -65,14 +65,14 @@ const getById = async (id: string) => {
   return result;
 };
 
-const updateById = async (id: string, user: User) => {
+const updateUser = async (id: string, user: User) => {
   const result = await UserRepository.update(id, user);
   return result;
 };
 
-const deleteById = async (id: string) => {
+const deleteUser = async (id: string) => {
   const result = await UserRepository.delete(id);
   return result;
 };
 
-export default { create, getAll, getById, updateById, deleteById };
+export default { create, getAllUser, getOneUser, updateUser, deleteUser };

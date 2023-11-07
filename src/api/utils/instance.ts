@@ -35,7 +35,7 @@ export enum ClassroomStatus {
 export const ROLES = ["admin", "teacher", "student"];
 export const LOGGED_USER = "_loggedUser";
 
-export interface IUser {
+export type IUser = {
   id: string;
   name: string;
   role: string;
@@ -43,11 +43,11 @@ export interface IUser {
   profile: {
     photo_path: string;
   };
-}
+};
 
-export interface SearchCustomOptions {
+export type SearchCustomOptions = {
   column: string | undefined;
   type: FindOptionsOrderValue | undefined;
   page: number;
   perPage: number;
-}
+};
