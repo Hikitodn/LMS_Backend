@@ -60,6 +60,6 @@ export class Classroom extends BaseEntity {
 
   @BeforeInsert()
   generateId() {
-    this.id = nanoid(12);
+    this.id = nanoid(7);
   }
 }

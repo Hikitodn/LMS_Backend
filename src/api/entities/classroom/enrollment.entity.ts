@@ -10,7 +10,7 @@ import { Classroom, User } from "..";
 @Entity("enrollment")
 export class Enrollment extends BaseEntity {
   @PrimaryGeneratedColumn()
-  public id: number;
+  public id: string;
 
   @Column()
   public student_id: string;

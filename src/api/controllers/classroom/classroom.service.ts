@@ -1,12 +1,15 @@
 import { Classroom, User } from "@entities/index";
 import { ClassroomRepository } from "./classroom.repository";
-import { IUser, SearchCustomOptions } from "@utils/instance";
+import { KeyValueType, SearchCustomOptions } from "@utils/instance";
 import { ApiError } from "@errors/api-error";
 import httpStatus from "http-status";
 
-const createClassroom = async (user: IUser, body: Classroom) => {
+const createClassroom = async (
+  params: KeyValueType<string>,
+  body: Classroom
+) => {
   const existedClassroom = await ClassroomRepository.findOne({
-    where: { name: body.name, user: { id: user.id } },
+    where: { name: body.name, user: { id: params.userId } },
   });
 
   if (existedClassroom)
@@ -16,7 +19,7 @@ const createClassroom = async (user: IUser, body: Classroom) => {
     });
 
   const userId = new User();
-  userId.id = user.id;
+  userId.id = params.userId;
 
   const newClassroom = new Classroom();
   newClassroom.name = body.name;
@@ -24,30 +27,32 @@ const createClassroom = async (user: IUser, body: Classroom) => {
   newClassroom.isPublic = body.isPublic;
   newClassroom.user = userId;
 
-  const result = await ClassroomRepository.save(newClassroom);
-  return result;
+  await ClassroomRepository.insert(newClassroom);
+  return newClassroom;
 };
 
 const getAllClassrooms = async (
-  userId: string,
+  params: KeyValueType<string>,
   { column, type = "asc", page = 1, perPage = 20 }: SearchCustomOptions
 ) => {
   const result = await ClassroomRepository.find({
     take: perPage,
     skip: perPage * (page - 1),
     cache: true,
-    where: { user: { id: userId } },
+    where: { user: { id: params.userId } },
     order: {
       [`${column === "name" ? "name" : "created_at"}`]: type,
     },
   });
+
   return result;
 };
 
-const getOneClassroom = async (id: string) => {
+const getOneClassroom = async (params: KeyValueType<string>) => {
   const result = await ClassroomRepository.findOneOrFail({
     where: {
-      id: id,
+      id: params.classroomId,
+      user: { id: params.userId },
     },
   });
 
@@ -56,13 +61,16 @@ const getOneClassroom = async (id: string) => {
   return result;
 };
 
-const updateClassroom = async (id: string, body: Classroom) => {
-  const result = await ClassroomRepository.update(id, body);
+const updateClassroom = async (
+  params: KeyValueType<string>,
+  body: Classroom
+) => {
+  const result = await ClassroomRepository.update(params.classroomId, body);
   return result;
 };
 
-const deleteClassroom = async (id: string) => {
-  const result = await ClassroomRepository.delete(id);
+const deleteClassroom = async (params: KeyValueType<string>) => {
+  const result = await ClassroomRepository.delete(params.classroomId);
   return result;
 };
 

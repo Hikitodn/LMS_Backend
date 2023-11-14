@@ -1,21 +1,18 @@
-import classroomController from "@controllers/classroom/classroom.controller";
 import { ClassroomController } from "@controllers/index";
 import { authMiddleware } from "@middlewares/index";
-import { LOGGED_USER, ROLES } from "@utils/instance";
+import TeacherRoute from "./teacher/index.route";
+import StudentRoute from "./student/index.route";
+import AdminRoute from "./admin/index.route";
 import express from "express";
 
 const router = express.Router();
 
-// Classroom
 router
-  .route("/")
-  .get(authMiddleware.authorize(ROLES[1]), ClassroomController.getAll)
-  .post(authMiddleware.authorize(ROLES[1]), ClassroomController.create);
-router
+  .use(TeacherRoute)
+  .use(StudentRoute)
+  .use(AdminRoute)
   .route("/:classroomId")
-  .get(authMiddleware.authorize(), ClassroomController.getOne)
-  .patch(authMiddleware.authorize(LOGGED_USER), classroomController.update)
-  .delete(authMiddleware.authorize(LOGGED_USER), ClassroomController.remove);
+  .get(authMiddleware.authorize(), ClassroomController.getOne);
 
 // Document
 router.route("/:classroomId/document").get().post();

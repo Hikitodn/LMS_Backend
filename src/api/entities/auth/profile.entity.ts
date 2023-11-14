@@ -3,11 +3,13 @@ import {
   BaseEntity,
   Column,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 import { User } from "./user.entity";
+import { FileUpload } from "..";
 
 @Entity("profile")
 export class Profile extends BaseEntity {
@@ -35,4 +37,7 @@ export class Profile extends BaseEntity {
 
   @OneToOne(() => User, (user) => user.profile)
   user: User;
+
+  @OneToMany(() => FileUpload, (file_upload) => file_upload.profile)
+  file_upload: FileUpload[]
 }

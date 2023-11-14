@@ -11,3 +11,6 @@ export * from "./classroom/enrollment.entity";
 export * from "./classroom/examine.entity";
 export * from "./classroom/grade.entity";
 export * from "./classroom/question.entity";
+
+// Other Entities
+export * from "./file_upload.entity";

@@ -21,11 +21,7 @@ const handleJwt =
     }
 
     if (role === LOGGED_USER) {
-      if (
-        user.role !== "admin" &&
-        req.params.userId !== user.id.toString() &&
-        req.query.userId !== user.id.toString()
-      ) {
+      if (user.role !== "admin" && req.params.userId !== user.id.toString()) {
         apiError.status = httpStatus.FORBIDDEN;
         apiError.message = "Forbidden";
         return next(apiError);

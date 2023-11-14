@@ -1,13 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import documentService from "./document.service";
-import { toPlainObject } from "lodash";
+import assignmentService from "./assignment.service";
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await documentService.createDocument(
-      toPlainObject(req.user),
-      req.params.id,
+    const result = await assignmentService.createAssignment(
+      req.params,
       req.body
     );
     res.status(httpStatus.CREATED);
@@ -19,11 +17,11 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await documentService.getAllDocument(
-      toPlainObject(req.params),
-      toPlainObject(req.query)
+    const result = await assignmentService.getAllAssignment(
+      req.params,
+      req.body
     );
-    res.status(httpStatus.CREATED);
+    res.status(httpStatus.OK);
     res.json({ user: req.user, result: result });
   } catch (error) {
     next(error);
@@ -32,7 +30,7 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
 
 const getOne = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await documentService.getOneDocument(req.params.id);
+    const result = await assignmentService.getOneAssignment(req.params);
     res.status(httpStatus.OK);
     res.json({ user: req.user, result: result });
   } catch (error) {
@@ -42,8 +40,8 @@ const getOne = async (req: Request, res: Response, next: NextFunction) => {
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await documentService.updateDocument(
-      req.params.classroomId,
+    const result = await assignmentService.updateAssignment(
+      req.params,
       req.body
     );
     res.status(httpStatus.OK);
@@ -55,7 +53,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
 
 const remove = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await documentService.deleteDocument(req.params.classroomId);
+    const result = await assignmentService.deleteAssignment(req.params);
     res.status(httpStatus.NO_CONTENT);
     res.json({ user: req.user, result: result });
   } catch (error) {

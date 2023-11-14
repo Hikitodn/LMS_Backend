@@ -47,7 +47,7 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
 
 const remove = async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    res.status(httpStatus.OK);
+    res.status(httpStatus.NO_CONTENT);
     // res.json(result);
   } catch (error) {
     next(error);

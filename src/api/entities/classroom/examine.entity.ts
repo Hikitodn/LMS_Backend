@@ -10,7 +10,7 @@ import { Classroom } from "./classroom.entity";
 @Entity("examine")
 export class Examine extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @Column()
   name: string;

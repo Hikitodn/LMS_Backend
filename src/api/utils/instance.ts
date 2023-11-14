@@ -35,19 +35,13 @@ export enum ClassroomStatus {
 export const ROLES = ["admin", "teacher", "student"];
 export const LOGGED_USER = "_loggedUser";
 
-export type IUser = {
-  id: string;
-  name: string;
-  role: string;
-  isVerfied: boolean;
-  profile: {
-    photo_path: string;
-  };
+export type KeyValueType<T> = {
+  [key: string]: T;
 };
 
 export type SearchCustomOptions = {
-  column: string | undefined;
-  type: FindOptionsOrderValue | undefined;
-  page: number;
-  perPage: number;
+  column?: string | undefined;
+  type?: FindOptionsOrderValue | undefined;
+  page?: number;
+  perPage?: number;
 };
