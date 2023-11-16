@@ -17,7 +17,7 @@ export const PostgresDataSource = new DataSource({
   migrations: [],
 });
 
-export const connect = async () => {
+export const db_connect = async () => {
   try {
     await PostgresDataSource.initialize();
     console.log("Data Source has been initialized successfully!");

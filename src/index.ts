@@ -1,13 +1,13 @@
 import "reflect-metadata";
 import app from "./config/express";
 import env from "./config/env";
-import { connect } from "./config/db_connect";
-// import { client } from "./config/redis";
+import { db_connect } from "./config/db_connect";
+import { redisClient } from "./config/redis";
 
 // Connect database
-connect();
+db_connect();
 // redis connect
-// client.connect();
+redisClient.connect();
 
 // Run server
 app.listen(env.port, () => {

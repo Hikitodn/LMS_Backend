@@ -34,7 +34,16 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
 
 const logout = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await authService.refreshToken(req.headers.authorization);
+    await authService.deleteRefreshToken(req.headers.authorization);
+    res.status(httpStatus.NO_CONTENT);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const profile = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await authService.getProfile(req.params.userId);
     res.status(httpStatus.OK);
     res.json(result);
   } catch (error) {
@@ -42,4 +51,14 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export default { register, login, refresh, logout };
+const update = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await authService.updateProfile(req.params.userId, req.body);
+    res.status(httpStatus.OK);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { register, login, refresh, logout, profile, update };

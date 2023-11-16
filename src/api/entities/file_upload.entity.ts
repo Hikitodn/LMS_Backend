@@ -24,6 +24,9 @@ export class FileUpload extends BaseEntity {
   @Column()
   type: string;
 
+  @Column()
+  path: string;
+
   @CreateDateColumn()
   created_at: Date;
 

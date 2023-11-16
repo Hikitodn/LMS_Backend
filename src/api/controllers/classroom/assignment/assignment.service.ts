@@ -9,7 +9,10 @@ const createAssignment = async (
   body: Assignment
 ) => {
   const existedAssignment = await AssignmentRepository.findOne({
-    where: { name: body.name, classroom: { id: params.classroomId } },
+    where: {
+      name: body.name,
+      classroom: { id: params.classroomId },
+    },
   });
 
   if (existedAssignment)
