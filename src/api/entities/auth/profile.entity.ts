@@ -4,22 +4,15 @@ import {
   Column,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { User } from "./user.entity";
 import { FileUpload } from "..";
 
 @Entity("profile")
 export class Profile extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({
-    nullable: true,
-  })
-  photo_path: string;
+  id: string;
 
   @Column({ type: "date" })
   date_of_birth: Date;
@@ -35,9 +28,6 @@ export class Profile extends BaseEntity {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToOne(() => User, (user) => user.profile)
-  user: User;
-
   @OneToMany(() => FileUpload, (file_upload) => file_upload.profile)
-  file_upload: FileUpload[]
+  photos: FileUpload[];
 }

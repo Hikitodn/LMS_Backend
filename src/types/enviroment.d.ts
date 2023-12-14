@@ -20,6 +20,9 @@ declare global {
       REDIS_HOST: string;
       REDIS_USER: string;
       REDIS_PASS: string;
+
+      // Redis
+      AZURE_STORAGE_ACCOUNT_NAME: string;
     }
   }
 }

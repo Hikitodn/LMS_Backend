@@ -23,4 +23,7 @@ export default {
   redis_host: process.env.REDIS_HOST,
   redis_user: process.env.REDIS_USER,
   redis_pass: process.env.REDIS_PASS,
+
+  // Azure
+  azure_storage_account_name: process.env.AZURE_STORAGE_ACCOUNT_NAME,
 };

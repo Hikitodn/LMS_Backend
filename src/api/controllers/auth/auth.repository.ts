@@ -5,17 +5,17 @@ import env from "src/config/env";
 import { ApiError } from "@errors/api-error";
 import httpStatus from "http-status";
 import moment from "moment";
-import Jwt, { JwtPayload } from "jsonwebtoken";
-import { pick } from "lodash";
+import Jwt from "jsonwebtoken";
 import { redisClient } from "src/config/redis";
 
-export const AuthRepository = PostgresDataSource.getRepository(User).extend({
+export const UserRepository = PostgresDataSource.getRepository(User).extend({
   async insertUser(body: User) {
-    const existedUser = await AuthRepository.findOne({
+    const existedUser = await UserRepository.findOne({
       where: {
         email: body.email,
       },
     });
+
     if (existedUser)
       throw new ApiError({
         message: "Email already registered",
@@ -23,8 +23,10 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
       });
 
     const profile = new Profile();
+    profile.photos = body.profile.photos;
     profile.date_of_birth = body.profile.date_of_birth;
     profile.gender = body.profile.gender;
+    await ProfileRepository.insert(profile);
 
     const user = new User();
     user.email = body.email;
@@ -32,21 +34,16 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
     user.name = body.name;
     user.role = body.role;
     user.profile = profile;
-    await AuthRepository.insert(user);
-    return pick(user, [
-      "id",
-      "name",
-      "is_verified",
-      "role",
-      "profile.photo_path",
-    ]);
+    await UserRepository.insert(user);
+
+    return user;
   },
 
-  async verifyUser(req: User) {
-    const user = await AuthRepository.findOne({
+  async verifyUser(body: User) {
+    const user = await UserRepository.findOne({
       relations: { profile: true },
       where: {
-        email: req.email,
+        email: body.email,
       },
     });
 
@@ -57,15 +54,8 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
 
     if (user) {
       if (user.password) {
-        // return user and jwt
-        if (user && (await bcrypt.compare(req.password, user.password))) {
-          return pick(user, [
-            "id",
-            "name",
-            "is_verified",
-            "role",
-            "profile.photo_path",
-          ]);
+        if (user && (await bcrypt.compare(body.password, user.password))) {
+          return user;
         }
         err.message = "Incorrect email or password";
       }
@@ -74,7 +64,7 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
     throw new ApiError(err);
   },
 
-  async verifyRefreshToken(refreshToken: string): Promise<Partial<User>> {
+  async verifyRefreshToken(refreshToken: string): Promise<User> {
     return new Promise((resolve, reject) => {
       Jwt.verify(
         refreshToken,
@@ -82,7 +72,7 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
         async (err, payload) => {
           if (err) reject(err);
 
-          const user = await AuthRepository.findOneOrFail({
+          const user = await UserRepository.findOneOrFail({
             where: {
               id: payload?.sub?.toString(),
             },
@@ -95,34 +85,17 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
               status: httpStatus.UNAUTHORIZED,
             });
 
-          if (refreshToken === redisRefreshToken)
-            resolve(
-              pick(user, [
-                "id",
-                "name",
-                "is_verified",
-                "role",
-                "profile.photo_path",
-              ])
-            );
+          if (refreshToken === redisRefreshToken) resolve(user);
         }
       );
     });
   },
 
   async generateTokenRespone(userId: string) {
-    const payload: JwtPayload = {
-      sub: userId,
-    };
-
     const tokenType = "Bearer";
-    const accessToken = await this.accessToken(payload);
-    const refreshToken = await this.refreshToken(payload);
-    const expiresIn = moment().add(env.jwtExpirationMinutes, "minutes");
-
-    await redisClient.set(userId, refreshToken, {
-      EX: 30 * 24 * 60 * 60,
-    });
+    const accessToken = await this.generateAccessToken(userId);
+    const refreshToken = await this.generateRefreshToken(userId);
+    const expiresIn = this.generateExpireTime();
 
     return {
       tokenType,
@@ -132,10 +105,10 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
     };
   },
 
-  accessToken(payload: JwtPayload): Promise<string> {
+  generateAccessToken(userId: string): Promise<string> {
     return new Promise((resolve, reject) => {
       Jwt.sign(
-        payload,
+        { sub: userId },
         env.jwtAccessToken as string,
         {
           expiresIn: 60 * Number(env.jwtExpirationMinutes),
@@ -148,21 +121,42 @@ export const AuthRepository = PostgresDataSource.getRepository(User).extend({
     });
   },
 
-  refreshToken(payload: JwtPayload): Promise<string> {
+  generateRefreshToken(userId: string): Promise<string> {
     return new Promise((resolve, reject) => {
       Jwt.sign(
-        payload,
+        { sub: userId },
         env.jwtRefreshToken as string,
         {
           expiresIn: "30d",
         },
         async (err, token) => {
           if (err) reject(err);
-          resolve(token!);
+          if (token) {
+            await redisClient.set(userId, token, {
+              EX: 30 * 24 * 60 * 60,
+            });
+            resolve(token!);
+          }
         }
       );
     });
   },
 
-  deleteToken() {},
+  generateExpireTime() {
+    return moment().add(env.jwtExpirationMinutes, "minutes");
+  },
+
+  getRefreshToken(token: string | undefined) {
+    if (!token) {
+      throw new ApiError({
+        message: "No token found",
+        status: httpStatus.UNAUTHORIZED,
+      });
+    }
+
+    const refreshToken = token.split(" ", 2)[1];
+    return refreshToken;
+  },
 });
+
+export const ProfileRepository = PostgresDataSource.getRepository(Profile);

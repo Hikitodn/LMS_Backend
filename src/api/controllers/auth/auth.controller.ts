@@ -41,24 +41,4 @@ const logout = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const profile = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await authService.getProfile(req.params.userId);
-    res.status(httpStatus.OK);
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const update = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await authService.updateProfile(req.params.userId, req.body);
-    res.status(httpStatus.OK);
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-};
-
-export default { register, login, refresh, logout, profile, update };
+export default { register, login, refresh, logout };

@@ -27,7 +27,7 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
 
 const getOne = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await userService.getOneUser(req.params.id);
+    const result = await userService.getOneUser(req.params);
     res.status(httpStatus.OK);
     res.json(result);
   } catch (error) {
@@ -37,7 +37,7 @@ const getOne = async (req: Request, res: Response, next: NextFunction) => {
 
 const update = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await userService.updateUser(req.params.id, req.body);
+    const result = await userService.updateUser(req.params, req.body);
     res.status(httpStatus.OK);
     res.json(result);
   } catch (error) {
@@ -45,10 +45,10 @@ const update = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const remove = async (_req: Request, res: Response, next: NextFunction) => {
+const remove = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    await userService.deleteUser(req.params);
     res.status(httpStatus.NO_CONTENT);
-    // res.json(result);
   } catch (error) {
     next(error);
   }

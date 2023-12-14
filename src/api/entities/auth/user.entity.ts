@@ -42,7 +42,7 @@ export class User extends BaseEntity {
   @CreateDateColumn()
   created_at: Date;
 
-  @OneToOne(() => Profile, (profile) => profile.user, { cascade: ["insert"] })
+  @OneToOne(() => Profile)
   @JoinColumn()
   profile: Profile;
 

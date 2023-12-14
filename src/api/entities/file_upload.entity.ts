@@ -40,7 +40,7 @@ export class FileUpload extends BaseEntity {
   })
   assignment: Assignment;
 
-  @ManyToOne(() => Profile, (profile) => profile.file_upload, {
+  @ManyToOne(() => Profile, (profile) => profile.photos, {
     nullable: true,
   })
   profile: Profile;

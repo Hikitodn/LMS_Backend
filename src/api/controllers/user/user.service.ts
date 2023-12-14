@@ -1,77 +1,96 @@
-import { User } from "@entities/index";
-import { UserRepository } from "./user.repository";
-// import { ApiError } from "@errors/api-error";
-// import httpStatus from "http-status";
-// import { omitBy } from "lodash";
+import { Profile, User } from "@entities/index";
+import { ProfileRepository, UserRepository } from "./user.repository";
+import { ApiError } from "@errors/api-error";
+import httpStatus from "http-status";
+import { omit } from "lodash";
+import { KeyValueType, SearchCustomOptions } from "@utils/instance";
 
-const create = async (user: User) => {
-  const newUser = new User();
+const create = async (body: User) => {
+  const existedUser = await UserRepository.findOne({
+    where: { email: body.email },
+  });
 
-  newUser.email = user.email;
-  newUser.password = user.password;
+  if (existedUser) {
+    throw new ApiError({
+      message: "Email already registered",
+      status: httpStatus.CONFLICT,
+    });
+  }
 
-  // const existedUser = await UserRepository.findOne({
-  //   where: { email: newUser.email },
-  // });
+  const profile = new Profile();
+  profile.photos = body.profile.photos;
+  profile.date_of_birth = body.profile.date_of_birth;
+  profile.gender = body.profile.gender;
+  await ProfileRepository.insert(profile);
 
-  // if (existedUser?.email) {
-  //   throw new ApiError({
-  //     status: httpStatus.UNPROCESSABLE_ENTITY,
-  //     message: "Duplicated Email",
-  //     errors: "Api Error",
-  //     isPublic: false,
-  //   });
-  // }
+  const user = new User();
+  user.email = body.email;
+  user.password = body.password;
+  user.name = body.name;
+  user.role = body.role;
+  user.profile = profile;
+  await UserRepository.insert(user);
 
-  const result = await UserRepository.insert(newUser);
-  return result;
+  return omit(user, [
+    "password",
+    "created_at",
+    "profile.id",
+    "profile.updated_at",
+  ]);
 };
 
-const getAllUser = async ({ page = 1, perPage = 20 }) => {
-  const fields = {
-    id: true,
-    email: true,
-    name: true,
-    role: true,
-    is_verified: true,
-    created_at: true,
-  };
-
+const getAllUser = async ({
+  column = "created_at",
+  type = "ASC",
+  page = 1,
+  perPage = 20,
+}: SearchCustomOptions) => {
   const result = await UserRepository.find({
     take: perPage,
-    select: fields,
+    select: {
+      email: true,
+      name: true,
+      role: true,
+      is_verified: true,
+      created_at: true,
+    },
     skip: perPage * (page - 1),
     cache: true,
+    order: {
+      [`${column}`]: type,
+    },
   });
 
   return result;
 };
 
-const getOneUser = async (id: string) => {
-  const fields = {
-    id: true,
-    email: true,
-    name: true,
-    role: true,
-    is_verified: true,
-    created_at: true,
-  };
-
+const getOneUser = async (params: KeyValueType<string>) => {
   const result = await UserRepository.findOne({
-    where: { id: id },
-    select: fields,
+    where: { id: params.id },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+      is_verified: true,
+      created_at: true,
+      profile: {
+        date_of_birth: true,
+      },
+    },
+    relations: { profile: true },
   });
 
   return result;
 };
 
-const updateUser = async (id: string, user: User) => {
-  const result = await UserRepository.update(id, user);
+const updateUser = async (params: KeyValueType<string>, user: User) => {
+  const result = await UserRepository.update(params.id, user);
   return result;
 };
 
-const deleteUser = async (id: string) => {
-  const result = await UserRepository.delete(id);
+const deleteUser = async (params: KeyValueType<string>) => {
+  const result = await UserRepository.delete(params.id);
   return result;
 };
 
